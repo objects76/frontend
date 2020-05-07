@@ -36,17 +36,22 @@ function rand(s,e) {  // [s,e]
     return Math.random()* (e-s+1) + s;
 }
 
+let mouse = {
+    x:-1000,
+    y:-1000,
+};
+
 function Circle() {
     this.x = rand(0, innerWidth);
     this.y = rand(0, innerHeight);
-    this.dx = rand(3, 8);
-    this.dy = rand(3, 8);
+    this.dx = rand(1, 3);
+    this.dy = rand(1, 3);
     this.radius = rand(5,60);
     let r = rand(0,255); // [0,255]
     let g = rand(0,255);
     let b = rand(0,255);
     this.color = `rgba(${r},${g},${b}, 1)`;
-    this.fill = `rgba(${r},${g},${b}, 0.5)`;
+    this.fill = `rgba(${r},${g},${b}, ${rand(0.3, 0.8)})`;
 
     this.draw = ()=>{
         c.beginPath();
@@ -61,10 +66,22 @@ function Circle() {
     this.update = ()=>{
         this.x += this.dx;
         this.y += this.dy;
-        if (this.x > window.innerWidth-this.radius && this.dx > 0) this.dx = -this.dx;
+        if (this.x > canvas.width-this.radius && this.dx > 0) this.dx = -this.dx;
         if (this.x < this.radius && this.dx < 0) this.dx = -this.dx;
-        if (this.y > window.innerHeight-this.radius && this.dy > 0) this.dy = -this.dy;
+        if (this.y > canvas.height-this.radius && this.dy > 0) this.dy = -this.dy;
         if (this.y < this.radius && this.dy < 0) this.dy = -this.dy;
+
+        // interact with mouse
+        if (Math.abs(mouse.x - this.x) < 50 && Math.abs(mouse.y - this.y) < 50) {
+            this.radius += 1;
+            if (this.radius > 200)
+                this.radius = 200;
+        }
+        else {
+            this.radius -= 1;
+            if (this.radius < 2) 
+                this.radius = 2;
+        }
     };
 }
 
@@ -90,16 +107,28 @@ let circles = [];
 function animate() {
     if (circles.length == 0)
     {
-        for(let i=0; i<100; ++i)
+        for(let i=0; i<500; ++i)
             circles.push(new Circle());
     }
     requestAnimationFrame(animate);
 
-    c.clearRect(0,0, window.innerWidth, window.innerHeight);
+    c.clearRect(0,0, canvas.width, canvas.height);
     for(let c of circles) {
         c.draw();
         c.update();
     }
     //bouncing();
 }
+
+
+window.addEventListener('mousemove', (event)=>{
+    // console.log(event);
+    if (event.buttons == 1) {
+        mouse.x = event.clientX;
+        mouse.y = event.clientY;
+    }
+    else {
+        mouse.x = mouse.y = -1000;
+    }
+});
 animate();
