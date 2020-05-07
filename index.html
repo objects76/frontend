@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <title>Canvas Paint - Example 5</title>
+    <style type="text/css">
+        body,
+        html {
+            margin: 10;
+            padding: 0;
+        }
+/* 
+        #canvasContainer {
+            width: 100%;
+            height: 100%;
+            background-color: green;
+        }
+
+
+        #canvas {
+            border: 1px solid #000;
+            position: fixed;
+            left: 10;
+            top: 10;
+        } */
+
+        div.container {
+            position: absolute;
+            margin:5;
+            width: 98%;
+            height: 95%;
+            border: 1px solid #000;
+        }
+
+        div#pallette {
+            position: absolute;
+            top: 1px;
+            bottom: 1px;
+            left: 1px;
+            right: 1px;
+        }
+
+        canvas#myCanvas {
+            background-color: white;
+            position: absolute;
+            left: 0;
+            top: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <select id="palette_type" onchange="on_palette_type(this)" style='margin-bottom:5px;'>
+        <!-- https://stackoverflow.com/questions/15224466/display-optgroup-label-as-initial-option -->
+        <option disabled="disabled" style="color:gray" hidden="hidden">Select palette type</option>
+        <!-- <optgroup label="Select palette type"> -->
+            <option value="win32SystemPalette"selected="selected" >win32SystemPalette</option>
+            <option value="websafeColors">websafeColors</option>
+            <option value="macSystemPalette">macSystemPalette</option>
+        <!-- </optgroup> -->
+        <!-- <option value="macSystemPalette" selected="selected">macSystemPalette</option> -->
+    </select>
+    
+    <div class="container">
+        <canvas id="myCanvas">
+            <p>canvas is Not supported.</p>
+        </canvas>
+    </div>
+    <script type="text/javascript" src="example-5.js"></script>
+</body>
+
+</html>
