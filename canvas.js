@@ -70,7 +70,7 @@ function Circle() {
         if (this.x < this.radius && this.dx < 0) this.dx = -this.dx;
         if (this.y > canvas.height-this.radius && this.dy > 0) this.dy = -this.dy;
         if (this.y < this.radius && this.dy < 0) this.dy = -this.dy;
-
+        
         // interact with mouse
         if (Math.abs(mouse.x - this.x) < 50 && Math.abs(mouse.y - this.y) < 50) {
             this.radius += 1;
@@ -103,16 +103,30 @@ function bouncing() {
     if (y < radius && dy < 0) dy = -dy;
 }
 
+let image = null;
+let dst_width, dst_height;
 let circles = [];
 function animate() {
     if (circles.length == 0)
     {
         for(let i=0; i<500; ++i)
             circles.push(new Circle());
+        image = new Image(); // Using optional size for image
+        image.src = 'images/screenshot.jpg';
+
+
+        if (typeof c.filter === "undefined") {
+            alert("Sorry, the browser doesn't support Context2D filters.")
+           }
+        console.log(c.imageSmoothingQuality);
+        if (c.imageSmoothingQuality)
+            c.imageSmoothingQuality = 'high';
     }
     requestAnimationFrame(animate);
 
     c.clearRect(0,0, canvas.width, canvas.height);
+    c.drawImage(image, 0, 0, image.width, image.height, 0,0 , dst_width, dst_height); // fit.
+
     for(let c of circles) {
         c.draw();
         c.update();
@@ -120,6 +134,23 @@ function animate() {
     //bouncing();
 }
 
+window.addEventListener("resize", (ev)=>{
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+    let imageRatio = image.width/image.height;
+    let canvasRatio = canvas.width/canvas.height;
+    if (imageRatio>canvasRatio)
+    {
+        dst_width = canvas.width;
+        dst_height = canvas.width / imageRatio;
+    }
+    else 
+    {
+        dst_width = canvas.height * imageRatio;
+        dst_height = canvas.height;
+    }
+
+});
 
 window.addEventListener('mousemove', (event)=>{
     // console.log(event);
